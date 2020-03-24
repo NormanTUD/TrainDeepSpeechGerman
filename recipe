@@ -1,0 +1,55 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+#%runscript 
+#   exec /src/start.sh
+
+#%files
+#   restapi /tmp
+#   start.sh /tmp
+
+#%environment
+    
+%labels
+   AUTHOR norman.koch@tu-dresden.de
+
+%post
+    apt-get update
+    apt-get clean && apt-get -y upgrade 
+    apt-get -y install gcc
+    apt-get -y install build-essential	 
+    apt-get -y install python3-dev
+    apt-get -y install cmake 
+    apt-get -y install uuid-dev
+    apt-get -y install git
+    apt-get -y install wget
+    apt-get -y install tar
+    apt-get -y install libsox-fmt-mp3
+    apt-get -y install sox
+    apt-get -y install python3
+    apt-get -y install python3-pip
+    apt-get -y install pv 
+    apt-get -y install dialog
+    python3 -m pip install --upgrade pip setuptools
+    pip3 install 'tensorflow-gpu==1.15.0'
+    pip3 install progressbar2
+    pip3 install sox
+
+    pip3 install deepspeech
+    pip3 install deepspeech-gpu
+    
+    mkdir /ds/
+    git clone https://github.com/mozilla/DeepSpeech /ds/
+    pip3 install -r /ds/requirements.txt
+    pip3 install $(python3 /ds/util/taskcluster.py --decoder)
+
+    mkdir -p /dstrain/
+    cd /dstrain/
+    wget https://raw.githubusercontent.com/NormanTUD/TrainDeepSpeechGerman/master/alphabet.txt
+    wget https://voice-prod-bundler-ee1969a6ce8178826482b88e843c335139bd3fb4.s3.amazonaws.com/cv-corpus-4-2019-12-10/de.tar.gz
+    tar xf de.tar.gz
+    rm de.tar.gz
+
+    python3 /ds/bin/import_cv2.py --filter_alphabet /dstrain/alphabet.txt /dstrain/
+
+    /ds/DeepSpeech.py --train_files /dstrain/clips/train.csv --dev_files /dstrain/clips/dev.csv --test_files /dstrain/clips/test.csv
