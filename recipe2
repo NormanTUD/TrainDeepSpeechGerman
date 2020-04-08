@@ -12,38 +12,25 @@ com.nvidia.cuda.version="${CUDA_VERSION}"
 
     echo 'Acquire::http { Proxy "http://192.168.0.132:3142"; };' > /etc/apt/apt.conf.d/02proxy
     cat /etc/apt/apt.conf.d/02proxy
-    apt-get update && apt-get install -y --no-install-recommends ca-certificates apt-transport-https gnupg-curl
+    apt-get update && apt-get install -y --no-install-recommends ca-certificates apt-transport-https gnupg-curl vim curl
 
-    apt-get -y install python-dev
-    apt-get -y install python3-dev
-
-
-    apt-get -y install python3-numpy python3-dev python3-pip python3-wheel sed
+    apt-get -y install python-dev python3-dev python3-numpy python3-dev python3-pip python3-wheel sed
+    apt-get -y install gcc build-essential cmake python3-dev cmake uuid-dev git libsox-fmt-mp3 sox python3 python3-alembic alembic wget
 
     python3 -m pip install --upgrade pip setuptools
 
-    #mypip pandas==0.25.3 -v
-    mypip pandas
-
-    apt-get -y install gcc build-essential cmake python3-dev cmake uuid-dev git libsox-fmt-mp3 sox python3 python3-pip python3-alembic alembic wget
-
-    mypip virtualenv h5py pyyaml requests Pillow scipy keras
-    mypip futures==3.1.1
-    mypip sox
-    mypip progressbar2
-    mypip 'tensorflow-gpu==1.15.2'
+    mypip pandas tensorflow-gpu==1.15.2 numpy==1.18.1 progressbar2 six pyxdg attrdict absl-py semver opuslib==2.0.0 optuna sox bs4 pandas requests librosa soundfile virtualenv pyyaml requests futures==3.1.1
     mypip --upgrade pip==20.0.2 wheel==0.34.2 setuptools==46.1.3
 
     mkdir /ds/
 
     git clone --depth 1 https://github.com/mozilla/DeepSpeech /ds/
-    #mypip -r /ds/requirement.txt
-    #python3 /ds/util/taskcluster.py --decoder > /ds/toinstall.txt
-    #mypip -r /ds/toinstall.txt
 
     wget https://raw.githubusercontent.com/lissyx/taskcluster-github-decision/master/requirements.txt -O /ds/requirements.txt
 
     sed -i 's/pandas==0.25.3/pandas/' /ds/requirements_eval_tflite.txt
+    sed -i 's/tensorflow/tensorflow-gpu/' /ds/training/deepspeech_training.egg-info/requires.txt
+    sed -i 's/tensorflow == 1.15.2/tensorflow-gpu == 1.15.2/' /ds/setup.py
 
     pip3 install -r /ds/requirements_eval_tflite.txt  
     pip3 install -r /ds/requirements_tests.txt  
@@ -53,8 +40,6 @@ com.nvidia.cuda.version="${CUDA_VERSION}"
 
     #pip3 install $(python3 /ds/util/taskcluster.py --decoder)
 
-    #mypip --upgrade --force-reinstall -e /ds/
-        
     apt-get clean
 
 
@@ -126,12 +111,11 @@ apt-get update && apt-get install -y --no-install-recommends \
 
     apt-get update
     apt-get dist-upgrade -y
-    apt-get -y install vim
 
     # build environment
-    apt-get -y install wget curl bzip2 build-essential make g++ git cmake \
-python python3 python-pip python3-pip locales apt apt-utils \
-apt-transport-https ca-certificates vim dialog xauth libx11-dev \
+    apt-get -y install curl bzip2 build-essential make g++ cmake \
+python python-pip locales apt apt-utils \
+apt-transport-https ca-certificates xauth libx11-dev \
 libglu1-mesa-dev libnss3 libasound2 libegl1-mesa
 
     locale-gen en_US.UTF-8
@@ -149,26 +133,15 @@ libibverbs1 libibverbs-dev software-properties-common
     add-apt-repository ppa:marutter/rrutter
     apt-get update
     apt-get -y install libxml2-dev libssl-dev libcurl4-openssl-dev \
-libxslt1-dev r-base gdebi-core environment-modules python-virtualenv \
+libxslt1-dev gdebi-core environment-modules python-virtualenv \
 letsencrypt tcl libclang-dev libxslt1-dev libssl1.0.0 libclang-3.8-dev \
 libclang-common-3.8-dev libclang-dev libclang1-3.8 libllvm3.8 libobjc-5-dev \
 libobjc4
-
-# This part is optional
-#    cd /apps
-#    if [ ! -d rstudio ]; then
-#        mkdir rstudio
-#        cd rstudio
-#        wget -q https://s3.amazonaws.com/rstudio-ide-build/desktop/trusty/amd64/rstudio-1.2.1091-amd64.deb
-#        dpkg -i rstudio-1.2.1091-amd64.deb
-#        rm rstudio-1.2.1091-amd64.deb
-#    fi
 
     locale-gen en_US en_US.UTF-8
     dpkg-reconfigure locales
 
 
-pip3 uninstall tensorflow
 # End of copy
 
 %environment
