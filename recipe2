@@ -168,6 +168,7 @@ libobjc4
     dpkg-reconfigure locales
 
 
+pip3 uninstall tensorflow
 # End of copy
 
 %environment
