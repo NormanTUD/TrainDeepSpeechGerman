@@ -7,20 +7,20 @@ From: ubuntu:16.04
 	com.nvidia.cuda.version="${CUDA_VERSION}"
 
 %post
-    ENABLE_APT_CACHE=1 # Enable if you want to cache apt-get downloads (needs apt-cacher-ng on host)
-    ENABLE_PIP_CACHE=0 # Enable if you want to cache pip3 downloads (needs pypi and supervisor on host)
-    HOST_IP=192.168.0.132 # Host IP for caching
-    if [ "${ENABLE_APT_CACHE}" -eq "1" ]; then
-        echo "Acquire::http { Proxy \"http://${HOST_IP}:3142\"; };" > /etc/apt/apt.conf.d/02proxy
-    fi
+	ENABLE_APT_CACHE=1 # Enable if you want to cache apt-get downloads (needs apt-cacher-ng on host)
+	ENABLE_PIP_CACHE=0 # Enable if you want to cache pip3 downloads (needs pypi and supervisor on host)
+	HOST_IP=192.168.0.132 # Host IP for caching
+	if [ "${ENABLE_APT_CACHE}" -eq "1" ]; then
+		echo "Acquire::http { Proxy \"http://${HOST_IP}:3142\"; };" > /etc/apt/apt.conf.d/02proxy
+	fi
 
-    echo '#!/bin/bash' >> /bin/mypip
-    if [ "${ENABLE_PIP_CACHE}" -eq "1" ]; then
-        echo "pip3 install -i http://${HOST_IP}:3141/root/pypi/+simple/ --trusted-host ${HOST_IP} \$*" >> /bin/mypip
-    else
-        echo 'pip3 install $*' >> /bin/mypip
-    fi
-    chmod +x /bin/mypip
+	echo '#!/bin/bash' >> /bin/mypip
+	if [ "${ENABLE_PIP_CACHE}" -eq "1" ]; then
+		echo "pip3 install -i http://${HOST_IP}:3141/root/pypi/+simple/ --trusted-host ${HOST_IP} \$*" >> /bin/mypip
+	else
+		echo 'pip3 install $*' >> /bin/mypip
+	fi
+	chmod +x /bin/mypip
 
 	NVIDIA_GPGKEY_SUM=d1be581509378368edeec8c1eb2958702feedf3bc3d17011adbf24efacce4ab5
 	NVIDIA_GPGKEY_FPR=ae09fe4bbd223a84b2ccfce3f60f4b3d7fa2af80
@@ -41,9 +41,9 @@ From: ubuntu:16.04
 	apt-get update
 
 	apt-get --no-install-recommends -y install \
-        gnupg-curl \
-        software-properties-common \
-        apt-transport-https
+		gnupg-curl \
+		software-properties-common \
+		apt-transport-https
 
 	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 	apt-key adv --export --no-emit-version -a ${NVIDIA_GPGKEY_FPR} | tail -n +5 > cudasign.pub
@@ -56,65 +56,65 @@ From: ubuntu:16.04
 	apt-get update
 
 	apt-get --no-install-recommends -y install \
-	    alembic \
-        apt \
-        apt-utils \
-        build-essential \
-        ca-certificates \
-        cmake \
-        cuda-command-line-tools-${CUDA_PKG_VERSION} \
-        cuda-core-9-0=9.0.176.3-1 \
-        cuda-cublas-9-0=9.0.176.4-1 \
-        cuda-cublas-dev-9-0=9.0.176.4-1 \
-        cuda-cudart-${CUDA_PKG_VERSION} \
-        cuda-libraries-${CUDA_PKG_VERSION} \
-        cuda-libraries-dev-${CUDA_PKG_VERSION} \
-        cuda-minimal-build-${CUDA_PKG_VERSION} \
-        cuda-nvml-dev-${CUDA_PKG_VERSION} \
-        curl \
-        environment-modules \
-        g++ \
-        gcc \
-        git \
-        libasound2 \
-        libcudnn7=${CUDNN_VERSION}-1+cuda9.0 \
-        libcudnn7-dev=${CUDNN_VERSION}-1+cuda9.0 \
-        libcurl4-openssl-dev \
-        libegl1-mesa \
-        libglu1-mesa-dev \
-        libibverbs1 \
-        libibverbs-dev \
-        libllvm3.8 \
-        libmlx4-1 \
-        libmlx4-dev \
-        libmlx5-1 \
-        libmlx5-dev \
-        libnccl2=${NCCL_VERSION}-2+cuda9.0 \
-        libnccl-dev=${NCCL_VERSION}-2+cuda9.0 \
-        libnss3 \
-        libobjc4 \
-        libobjc-5-dev \
-        libsox-fmt-mp3 \
-        libssl1.0.0 \
-        libssl-dev \
-        libxml2-dev \
-        libxslt1-dev \
-        locales \
-        make \
-        python \
-        python3 \
-        python3-alembic \
-        python3-dev \
-        python3-pip \
-        python3-wheel \
-        python-dev \
-        python-pip \
-        python-virtualenv \
-        sed \
-        sox \
-        uuid-dev \
-        vim \
-        wget
+		alembic \
+		apt \
+		apt-utils \
+		build-essential \
+		ca-certificates \
+		cmake \
+		cuda-command-line-tools-${CUDA_PKG_VERSION} \
+		cuda-core-9-0=9.0.176.3-1 \
+		cuda-cublas-9-0=9.0.176.4-1 \
+		cuda-cublas-dev-9-0=9.0.176.4-1 \
+		cuda-cudart-${CUDA_PKG_VERSION} \
+		cuda-libraries-${CUDA_PKG_VERSION} \
+		cuda-libraries-dev-${CUDA_PKG_VERSION} \
+		cuda-minimal-build-${CUDA_PKG_VERSION} \
+		cuda-nvml-dev-${CUDA_PKG_VERSION} \
+		curl \
+		environment-modules \
+		g++ \
+		gcc \
+		git \
+		libasound2 \
+		libcudnn7=${CUDNN_VERSION}-1+cuda9.0 \
+		libcudnn7-dev=${CUDNN_VERSION}-1+cuda9.0 \
+		libcurl4-openssl-dev \
+		libegl1-mesa \
+		libglu1-mesa-dev \
+		libibverbs1 \
+		libibverbs-dev \
+		libllvm3.8 \
+		libmlx4-1 \
+		libmlx4-dev \
+		libmlx5-1 \
+		libmlx5-dev \
+		libnccl2=${NCCL_VERSION}-2+cuda9.0 \
+		libnccl-dev=${NCCL_VERSION}-2+cuda9.0 \
+		libnss3 \
+		libobjc4 \
+		libobjc-5-dev \
+		libsox-fmt-mp3 \
+		libssl1.0.0 \
+		libssl-dev \
+		libxml2-dev \
+		libxslt1-dev \
+		locales \
+		make \
+		python \
+		python3 \
+		python3-alembic \
+		python3-dev \
+		python3-pip \
+		python3-wheel \
+		python-dev \
+		python-pip \
+		python-virtualenv \
+		sed \
+		sox \
+		uuid-dev \
+		vim \
+		wget
 
 	apt-mark hold libnccl2 libcudnn7
 	apt-get dist-upgrade -y
@@ -128,8 +128,34 @@ From: ubuntu:16.04
 
 	python3 -m pip install --upgrade pip setuptools
 
-	mypip --upgrade pip==20.0.2 wheel==0.34.2 setuptools==46.1.3
-	mypip absl-py==0.9.0 argparse attrdict==2.0.1 bs4 deepspeech futures==3.1.1 json-e==2.3.1 librosa networkx==2.2 optuna opuslib==2.0.0 pandas progressbar2==3.47.0 python-utils==2.3.0 pyxdg pyyaml==5.1.1 requests==2.22.0 semver six==1.13.0 slugid==1.0.7 soundfile sox tensorflow-gpu==1.15.2 virtualenv webrtcvad
+	mypip --upgrade \
+		pip==20.0.2 \
+		wheel==0.34.2 \
+		setuptools==46.1.3
+
+	mypip \
+		absl-py==0.9.0 \
+		argparse attrdict==2.0.1 \
+		bs4 \
+		deepspeech \
+		futures==3.1.1 \
+		json-e==2.3.1 \
+		librosa networkx==2.2 \
+		optuna opuslib==2.0.0 \
+		pandas \
+		progressbar2==3.47.0 \
+		python-utils==2.3.0 \
+		pyxdg \
+		pyyaml==5.1.1 \
+		requests==2.22.0 \
+		semver \
+		six==1.13.0 \
+		slugid==1.0.7 \
+		soundfile \
+		sox \
+		tensorflow-gpu==1.15.2 \
+		virtualenv \
+		webrtcvad
 
 	mkdir /ds/
 
