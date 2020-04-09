@@ -10,12 +10,12 @@ From: ubuntu:16.04
     ENABLE_APT_CACHE=1 # Enable if you want to cache apt-get downloads (needs apt-cacher-ng on host)
     ENABLE_PIP_CACHE=0 # Enable if you want to cache pip3 downloads (needs pypi and supervisor on host)
     HOST_IP=192.168.0.132 # Host IP for caching
-    if [ $ENABLE_APT_CACHE ]; then
+    if [ "${ENABLE_APT_CACHE}" -eq "1" ]; then
         echo "Acquire::http { Proxy \"http://${HOST_IP}:3142\"; };" > /etc/apt/apt.conf.d/02proxy
     fi
     
     echo '#!/bin/bash' >> /bin/mypip
-    if [ $ENABLE_PIP_CACHE ]; then
+    if [ "${ENABLE_PIP_CACHE}" -eq "1" ]; then
         echo "pip3 install -i http://${HOST_IP}:3141/root/pypi/+simple/ --trusted-host ${HOST_IP} \$*" >> /bin/mypip
     else
         echo 'pip3 install $*' >> /bin/mypip
