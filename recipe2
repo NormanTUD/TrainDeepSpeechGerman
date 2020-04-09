@@ -58,7 +58,6 @@ From: ubuntu:16.04
 	apt-get -y install \
 	    alembic \
         apt \
-        apt-transport-https \
         apt-utils \
         build-essential \
         ca-certificates \
@@ -76,7 +75,6 @@ From: ubuntu:16.04
         environment-modules \
         g++ \
         gcc \
-        gdebi-core \
         git \
         libasound2 \
         libcudnn7=${CUDNN_VERSION}-1+cuda9.0 \
