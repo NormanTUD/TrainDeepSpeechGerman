@@ -13,7 +13,7 @@ From: ubuntu:16.04
     if [ "${ENABLE_APT_CACHE}" -eq "1" ]; then
         echo "Acquire::http { Proxy \"http://${HOST_IP}:3142\"; };" > /etc/apt/apt.conf.d/02proxy
     fi
-    
+
     echo '#!/bin/bash' >> /bin/mypip
     if [ "${ENABLE_PIP_CACHE}" -eq "1" ]; then
         echo "pip3 install -i http://${HOST_IP}:3141/root/pypi/+simple/ --trusted-host ${HOST_IP} \$*" >> /bin/mypip
@@ -39,14 +39,14 @@ From: ubuntu:16.04
 	echo "/usr/local/nvidia/lib64" >> /etc/ld.so.conf.d/nvidia.conf
 
 	apt-get update
-	
+
 	apt-get -y install \
         gnupg-curl \
         software-properties-common \
         apt-transport-https
 
 	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
-	apt-key adv --export --no-emit-version -a ${NVIDIA_GPGKEY_FPR} | tail -n +5 > cudasign.pub 
+	apt-key adv --export --no-emit-version -a ${NVIDIA_GPGKEY_FPR} | tail -n +5 > cudasign.pub
 	echo "${NVIDIA_GPGKEY_SUM} cudasign.pub" | sha256sum -c --strict - && rm cudasign.pub
 	echo "deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/ ./" > /etc/apt/sources.list.d/cuda.list
 	echo "deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/ ./" > /etc/apt/sources.list.d/nvidia-ml.list
@@ -119,6 +119,8 @@ From: ubuntu:16.04
 	apt-mark hold libnccl2 libcudnn7
 	apt-get dist-upgrade -y
 
+	locale-gen en_US.UTF-8
+
 	ln -s cuda-9.0 /usr/local/cuda
 
 	locale-gen en_US en_US.UTF-8
@@ -127,7 +129,7 @@ From: ubuntu:16.04
 	python3 -m pip install --upgrade pip setuptools
 
 	mypip --upgrade pip==20.0.2 wheel==0.34.2 setuptools==46.1.3
-	mypip absl-py==0.9.0 argparse attrdict==2.0.1 bs4 deepspeech futures==3.1.1 json-e==2.3.1 librosa networkx==2.2 optuna opuslib==2.0.0 pandas progressbar2==3.47.0 python-utils==2.3.0 pyxdg pyyaml==5.1.1 requests==2.22.0 semver six==1.13.0 slugid==1.0.7 soundfile sox tensorflow-gpu==1.15.2 virtualenv webrtcvad 
+	mypip absl-py==0.9.0 argparse attrdict==2.0.1 bs4 deepspeech futures==3.1.1 json-e==2.3.1 librosa networkx==2.2 optuna opuslib==2.0.0 pandas progressbar2==3.47.0 python-utils==2.3.0 pyxdg pyyaml==5.1.1 requests==2.22.0 semver six==1.13.0 slugid==1.0.7 soundfile sox tensorflow-gpu==1.15.2 virtualenv webrtcvad
 
 	mkdir /ds/
 
@@ -138,13 +140,11 @@ From: ubuntu:16.04
 	sed -i 's/pandas==0.25.3/pandas/' /ds/requirements_eval_tflite.txt
 	sed -i 's/tensorflow == 1.15.2/tensorflow-gpu == 1.15.2/' /ds/setup.py
 
-	mypip -r /ds/requirements_eval_tflite.txt 
-	mypip -r /ds/requirements_tests.txt 
+	mypip -r /ds/requirements_eval_tflite.txt
+	mypip -r /ds/requirements_tests.txt
 	mypip -r /ds/requirements_transcribe.txt
 
 	mypip --upgrade -e /ds/
-
-	locale-gen en_US.UTF-8
 
 	mkdir /scratch
 	mkdir /sw
