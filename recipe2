@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: nvidia/cuda:10.1-base-ubuntu16.04
+From: nvidia/cuda:10.0-base-ubuntu16.04
 
 %labels
 	maintainer "Norman Koch <norman.koch@tu-dresden.de>"
@@ -49,6 +49,15 @@ From: nvidia/cuda:10.1-base-ubuntu16.04
 	add-apt-repository ppa:marutter/rrutter
 
 	apt-get update
+
+	apt-get install -y --no-install-recommends \
+		cuda-10-0 \
+		libcudnn7=7.6.4.38-1+cuda10.0  \
+		libcudnn7-dev=7.6.4.38-1+cuda10.0;
+	apt-get install -y --no-install-recommends \
+		libnvinfer6=6.0.1-1+cuda10.0 \
+		libnvinfer-dev=6.0.1-1+cuda10.0 \
+		libnvinfer-plugin6=6.0.1-1+cuda10.0;
 
 	apt-get --no-install-recommends -y install \
 		alembic \
